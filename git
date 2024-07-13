@@ -1,0 +1,77 @@
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class HydrocarboneAnalyzer {
+    public static void main(String[] args) {
+        try {
+            // Charger les données depuis le fichier Excel
+            List<Materiel> materiels = loadDataFromExcel("hydrocarbone_data.xlsx");
+
+            // Analyser les données
+            analyzeLifetime(materiels);
+            analyzeOilConsumption(materiels);
+            analyzeMaintainCost(materiels);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static List<Materiel> loadDataFromExcel(String fileName) throws IOException {
+        List<Materiel> materiels = new ArrayList<>();
+        File file = new File(fileName);
+        FileInputStream fis = new FileInputStream(file);
+        Workbook workbook = new XSSFWorkbook(fis);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+            Row row = sheet.getRow(i);
+            Materiel materiel = new Materiel(
+                    (int) row.getCell(0).getNumericCellValue(),
+                    (int) row.getCell(1).getNumericCellValue(),
+                    row.getCell(2).getStringCellValue(),
+                    (double) row.getCell(3).getNumericCellValue(),
+                    (double) row.getCell(4).getNumericCellValue()
+            );
+            materiels.add(materiel);
+        }
+
+        workbook.close();
+        fis.close();
+        return materiels;
+    }
+
+    private static void analyzeLifetime(List<Materiel> materiels) {
+        // Analyser la durée de vie des matériels
+    }
+
+    private static void analyzeOilConsumption(List<Materiel> materiels) {
+        // Analyser la consommation de carburant des matériels
+    }
+
+    private static void analyzeMaintainCost(List<Materiel> materiels) {
+        // Analyser les coûts de maintenance des matériels
+    }
+
+    private static class Materiel {
+        private int id;
+        private int age;
+        private String type;
+        private double consommationCarburant;
+        private double coutMaintenance;
+
+        public Materiel(int id, int age, String type, double consommationCarburant, double coutMaintenance) {
+            this.id = id;
+            this.age = age;
+            this.type = type;
+            this.consommationCarburant = consommationCarburant;
+            this.coutMaintenance = coutMaintenance;
+        }
+
+        // Getters et setters
+    }
+}
